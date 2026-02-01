@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<!-- Botón modo noche con lunita -->
+<button class="night-btn" onclick="toggleNight()">🌙</button>
+
+<div class="app">
+
+  <!-- Encabezado con detalles Sanrio -->
+  <div class="header">
+  <div id="status" class="offline"> Esperando a tu pareja…</div>
+
+  <!-- Imagen de Cinnamoroll más grande y cerca del título -->
+  <img class="cinnamoroll" src="{{ url_for('static', filename='img/cinnamoroll.png') }}" alt="Cinnamoroll">
+
+  <h1 class="cinecito-title">Cinecito ☁️</h1>
+  <p>Miramos juntitos 💙</p>
+</div>
+
+  <!-- Tarjeta de video -->
+  <div class="card">
+    <video id="video" controls preload="metadata" playsinline></video>
+
+    <label class="upload-label">
+      ☁️ Subir peli para ver juntitos
+      <input type="file" id="uploadVideo" accept="video/mp4">
+    </label>
+
+    <div class="controls">
+      <button class="cute-btn" onclick="playVideo()">▶︎</button>
+      <button class="cute-btn" onclick="pauseVideo()">❚❚</button>
+      <button class="cute-btn" id="fullscreenBtn">⤢</button>
+    </div>
+  </div>
+
+  <!-- Tarjeta de chat -->
+  <div class="card">
+    <div class="chat" id="chat"></div>
+    <div class="chat-input">
+      <input id="message" placeholder="Escribile algo bonito… ☁️">
+      <button onclick="sendMessage()">↩︎</button>
+    </div>
+  </div>
+
+  <!-- Footer con temática Sanrio -->
+  <div class="footer">
+    ☁️ Cinnamoroll cuida su cinecito ☁️  
+    <br> Con amor cinnamorroll
+  </div>
+
+</div>
+
+<script>
+  // Función para modo noche
+  function toggleNight() {
+    document.body.classList.toggle("night");
+  }
+</script>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

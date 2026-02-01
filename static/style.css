@@ -1,0 +1,308 @@
+*{
+    box-sizing:border-box;
+    font-family:'Baloo 2', cursive;
+}
+
+body{
+    margin:0;
+    background:linear-gradient(180deg,#eaf7ff,#ffffff);
+    display:flex;
+    justify-content:center;
+    transition:0.6s;
+}
+body.night{
+    background:linear-gradient(180deg,#141c2f,#243a5e);
+}
+
+.app{
+    width:100%;
+    max-width:420px;
+    min-height:100vh;
+    padding:15px;
+}
+
+.night-btn{
+    position:fixed;
+    top:12px;
+    right:12px;
+    border:none;
+    background:#cceeff;
+    border-radius:50%;
+    padding:8px 10px;
+    cursor:pointer;
+    font-size:17px;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:10px;
+}
+
+.cloud-container{
+    position:relative;
+    width:200px;
+    height:120px;
+    margin:0 auto 10px;
+}
+
+.cloud{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:70px;
+    background:white;
+    border-radius:50px;
+    box-shadow:30px 10px 0 white, 60px 0 0 white;
+    animation:cloudFloat 4s ease-in-out infinite;
+}
+
+.cinnamoroll{
+    position:absolute;
+    bottom:35px;
+    left:50%;
+    transform:translateX(-50%);
+    width:120px;
+    animation:cinnaFloat 3s ease-in-out infinite;
+}
+
+@keyframes cloudFloat{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-5px)}
+}
+@keyframes cinnaFloat{
+    0%,100%{transform:translate(-50%,0)}
+    50%{transform:translate(-50%,-8px)}
+}
+
+.card{
+    background:white;
+    border-radius:22px;
+    padding:12px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+    margin-bottom:12px;
+}
+body.night .card{ background:#1e2f4f; }
+
+video{
+    width:100%;
+    border-radius:16px;
+    background:black;
+}
+
+.controls{
+    display:flex;
+    margin-top:8px;
+}
+
+.cute-btn{
+    flex:1;
+    margin:0 4px;
+    border:none;
+    border-radius:16px;
+    padding:8px;
+    font-size:17px;
+    cursor:pointer;
+    background:linear-gradient(135deg,#e6f6ff,#cfe9ff);
+    color:#4b6fa5;
+}
+body.night .cute-btn{
+    background:linear-gradient(135deg,#2c4670,#1f3354);
+    color:#d6ecff;
+}
+
+.upload-label{
+    display:block;
+    margin:10px 0;
+    padding:12px;
+    text-align:center;
+    border-radius:18px;
+    cursor:pointer;
+    background:linear-gradient(135deg,#e6f6ff,#cfe9ff);
+    color:#4b6fa5;
+}
+.upload-label input{ display:none; }
+
+body.night .upload-label{
+    background:linear-gradient(135deg,#2c4670,#1f3354);
+    color:#d6ecff;
+}
+
+.chat{
+    height:160px;
+    overflow-y:auto;
+    background:#f4fbff;
+    border-radius:16px;
+    padding:8px;
+}
+.msg{
+    max-width:75%;
+    padding:7px 12px;
+    border-radius:18px;
+    margin-bottom:6px;
+    background:white;
+}
+body.night .chat{ background:#18263f; }
+body.night .msg{ background:#2c4670; color:#d6ecff; }
+
+.chat-input{
+    display:flex;
+    margin-top:6px;
+}
+.chat-input input{
+    flex:1;
+    border:none;
+    border-radius:16px;
+    padding:8px;
+}
+.chat-input button{
+    margin-left:6px;
+    border:none;
+    border-radius:16px;
+    background:#7bbce8;
+    color:white;
+    padding:8px 14px;
+}
+
+.footer{
+    text-align:center;
+    font-size:12px;
+    color:#aac2dd;
+}
+video{
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+video:playing{
+    box-shadow: 0 10px 30px rgba(120,180,255,0.5);
+}
+
+.online{
+    color:#6bb6ff;
+    animation:pulse 1.5s infinite;
+}
+.offline{
+    color:#aaa;
+}
+
+@keyframes pulse{
+    0%{opacity:1}
+    50%{opacity:.5}
+    100%{opacity:1}
+}
+
+.upload-label:hover{
+    transform:scale(1.03);
+}
+
+.cute-btn{
+    transition:transform .2s ease;
+}
+.cute-btn:hover{
+    transform:scale(1.1);
+}
+video{
+    background:black;
+    border-radius:16px;
+}
+
+video:playing{
+    box-shadow:0 0 30px rgba(130,190,255,.6);
+}
+/* --- Tema Cinnamoroll / Sanrio --- */
+body {
+  background: linear-gradient(180deg, #fdfbff, #eaf7ff);
+}
+
+body.night {
+  background: linear-gradient(180deg, #1a2238, #2a3b5f);
+}
+
+.card {
+  background: #ffffff;
+  border: 3px solid #cce7ff;
+  box-shadow: 0 8px 20px rgba(173, 216, 230, 0.4);
+}
+
+body.night .card {
+  background: #243a5e;
+  border-color: #4b6fa5;
+}
+
+.cute-btn {
+  background: linear-gradient(135deg, #fff0f5, #ffe4f0);
+  color: #6b5b95;
+  font-weight: 600;
+}
+
+body.night .cute-btn {
+  background: linear-gradient(135deg, #3b4a6b, #2a3b5f);
+  color: #f0f8ff;
+}
+
+.upload-label {
+  background: linear-gradient(135deg, #fdfdff, #e6f6ff);
+  border: 2px dashed #add8e6;
+  font-weight: 600;
+}
+
+.chat {
+  background: #fffafc;
+  border: 2px solid #ffe4f0;
+}
+
+body.night .chat {
+  background: #1e2f4f;
+  border-color: #4b6fa5;
+}
+
+.chat-msg, .msg {
+  background: #fdfdff;
+  border-radius: 20px;
+  padding: 8px 12px;
+  margin: 6px 0;
+  color: #4b6fa5;
+  box-shadow: 0 2px 6px rgba(173, 216, 230, 0.3);
+}
+
+body.night .chat-msg, body.night .msg {
+  background: #2c4670;
+  color: #d6ecff;
+}
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Fredoka+One&display=swap');
+
+.cinecito-title {
+  font-family: 'Pacifico', cursive;
+  font-size: 2.2em;
+  color: #6bb6ff;
+  text-shadow: 2px 2px 0 #ffffff, 4px 4px 8px rgba(173,216,230,0.6);
+  margin: 10px 0;
+  letter-spacing: 1px;
+}
+body.night .cinecito-title {
+  color: #d6ecff;
+  text-shadow: 2px 2px 0 #243a5e, 4px 4px 8px rgba(0,0,0,0.5);
+}
+/* Quitamos el contenedor de nubes */
+.cloud-container, .cloud {
+  display: none;
+}
+
+/* Cinnamoroll más grande y detrás del título */
+.cinnamoroll {
+  display: block;
+  margin: 0 auto;
+  width: 180px; /* más grande */
+  position: relative;
+  top: 10px; /* lo acerca al título */
+  z-index: 0; /* detrás del título */
+}
+
+/* El título encima de Cinnamoroll */
+.cinecito-title {
+  position: relative;
+  z-index: 1;
+  font-family: 'Pacifico', cursive;
+  font-size: 2.4em;
+  color: #6bb6ff;
+  text-shadow: 2px 2px 0 #fff, 4px 4px 8px rgba(173,216,230,0.6);
+  margin-top: -40px; /* lo baja para que toque las patitas */
+}
