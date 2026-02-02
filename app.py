@@ -25,7 +25,6 @@ video_lock = Lock()
 FFMPEG_PATH = "ffmpeg"
 
 def convert_video(filepath, converted_path):
-    """Conversión en segundo plano con preset ultrafast"""
     try:
         cmd = [
             FFMPEG_PATH, "-y", "-i", filepath,
@@ -34,12 +33,11 @@ def convert_video(filepath, converted_path):
         ]
         process = subprocess.Popen(cmd)
 
-        # Hilo que espera a que ffmpeg termine y luego emite el evento
         def wait_and_emit():
             process.wait()
             final_url = f"/uploads/{os.path.basename(converted_path)}"
             print("Conversión terminada:", final_url)
-            socketio.emit("new_video", {"url": final_url})
+            socketio.emit("new_video", {"url": final_url})  # 🔑 aquí también
 
         threading.Thread(target=wait_and_emit).start()
 
@@ -66,8 +64,9 @@ def upload():
         converted_path = os.path.join(UPLOAD_FOLDER, converted_filename)
         threading.Thread(target=convert_video, args=(filepath, converted_path)).start()
 
-        # Respondemos de inmediato con el original SOLO al cliente que sube
+        # Respondemos de inmediato con el original
         final_url = f"/uploads/{filename}"
+        socketio.emit("new_video", {"url": final_url})  # 🔑 aquí se emite a todos
         return jsonify({"url": final_url})
 
 @app.route("/uploads/<filename>")
