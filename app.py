@@ -25,24 +25,24 @@ video_lock = Lock()
 FFMPEG_PATH = "ffmpeg"
 
 def convert_video(filepath, converted_path):
+    """Versión rápida: transmuxing (sin recodificar)"""
     try:
         cmd = [
             FFMPEG_PATH, "-y", "-i", filepath,
-            "-c:v", "libx264", "-preset", "ultrafast",
-            "-c:a", "aac", converted_path
+            "-c:v", "copy", "-c:a", "copy", converted_path
         ]
-        process = subprocess.Popen(cmd)
+        process = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
         def wait_and_emit():
             process.wait()
             final_url = f"/uploads/{os.path.basename(converted_path)}"
-            print("Conversión terminada:", final_url)
-            socketio.emit("new_video", {"url": final_url})  # 🔑 aquí también
+            print("Conversión rápida terminada:", final_url)
+            socketio.emit("new_video", {"url": final_url})
 
         threading.Thread(target=wait_and_emit).start()
 
     except Exception as e:
-        print("Error en conversión:", e)
+        print("Error en conversión rápida:", e)
 
 @app.route("/")
 def index():
@@ -59,14 +59,14 @@ def upload():
         filepath = os.path.join(UPLOAD_FOLDER, filename)
         file.save(filepath)
 
-        # Lanzamos conversión en segundo plano
-        converted_filename = "converted_" + filename
+        # Lanzamos conversión rápida en segundo plano
+        converted_filename = "converted_" + os.path.splitext(filename)[0] + ".mp4"
         converted_path = os.path.join(UPLOAD_FOLDER, converted_filename)
         threading.Thread(target=convert_video, args=(filepath, converted_path)).start()
 
         # Respondemos de inmediato con el original
         final_url = f"/uploads/{filename}"
-        socketio.emit("new_video", {"url": final_url})  # 🔑 aquí se emite a todos
+        socketio.emit("new_video", {"url": final_url})
         return jsonify({"url": final_url})
 
 @app.route("/uploads/<filename>")
