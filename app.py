@@ -22,7 +22,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 video_lock = Lock()
 
 # Ruta absoluta a ffmpeg en Windows
-FFMPEG_PATH = r"C:\ffmpeg\bin\ffmpeg.exe"
+FFMPEG_PATH = "ffmpeg"
 
 def convert_video(filepath, converted_path):
     """Conversión en segundo plano con preset ultrafast"""
