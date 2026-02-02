@@ -32,7 +32,7 @@ def convert_video(filepath, converted_path):
             "-c:v", "libx264", "-preset", "ultrafast",
             "-c:a", "aac", converted_path
         ]
-        process = subprocess.Popen(cmd)
+        process = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
         # Hilo que espera a que ffmpeg termine y luego emite el evento
         def wait_and_emit():
