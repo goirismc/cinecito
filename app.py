@@ -7,7 +7,7 @@ from flask_socketio import SocketIO
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "cinnamoroll-secret"
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "default-secret")
 
 # Usamos gevent para WebSocket estable
 socketio = SocketIO(
