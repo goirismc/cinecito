@@ -21,20 +21,28 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 video_lock = Lock()
 
-# Ruta absoluta a ffmpeg en Windows
+# Ruta absoluta a ffmpeg en Render/Linux
 FFMPEG_PATH = "ffmpeg"
 
 def convert_video(filepath, converted_path):
     """Conversión en segundo plano con preset ultrafast"""
     try:
-        subprocess.run([
+        cmd = [
             FFMPEG_PATH, "-y", "-i", filepath,
             "-c:v", "libx264", "-preset", "ultrafast",
             "-c:a", "aac", converted_path
-        ], check=True)
-        final_url = f"/uploads/{os.path.basename(converted_path)}"
-        print("Conversión terminada:", final_url)
-        socketio.emit("new_video", {"url": final_url})
+        ]
+        process = subprocess.Popen(cmd)
+
+        # Hilo que espera a que ffmpeg termine y luego emite el evento
+        def wait_and_emit():
+            process.wait()
+            final_url = f"/uploads/{os.path.basename(converted_path)}"
+            print("Conversión terminada:", final_url)
+            socketio.emit("new_video", {"url": final_url})
+
+        threading.Thread(target=wait_and_emit).start()
+
     except Exception as e:
         print("Error en conversión:", e)
 
