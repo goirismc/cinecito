@@ -39,7 +39,7 @@ def convert_video(filepath, converted_path):
             process.wait()
             final_url = f"/uploads/{os.path.basename(converted_path)}"
             print("Conversión terminada:", final_url)
-            socketio.emit("new_video", {"url": final_url})
+            socketio.emit("new_video", {"url": final_url}, broadcast=True)
 
         threading.Thread(target=wait_and_emit).start()
 
@@ -68,7 +68,7 @@ def upload():
 
         # Respondemos de inmediato con el original
         final_url = f"/uploads/{filename}"
-        socketio.emit("new_video", {"url": final_url})
+        socketio.emit("new_video", {"url": final_url}, broadcast=True)
         return jsonify({"url": final_url})
 
 @app.route("/uploads/<filename>")
