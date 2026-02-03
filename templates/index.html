@@ -18,17 +18,20 @@
 
   <!-- Encabezado con detalles Sanrio -->
   <div class="header">
-  <div id="status" class="offline"> Esperando a tu pareja…</div>
+  <div id="status" class="offline">Esperando a tu pareja…</div>
 
-  <!-- Imagen de Cinnamoroll -->
-  <img class="cinnamoroll" src="{{ url_for('static', filename='img/cinnamoroll.png') }}" alt="Cinnamoroll">
+  <div class="header-row">
+    <img class="new-friend" src="{{ url_for('static', filename='img/pochacco.png') }}" alt="Pochacco">
 
-  <!-- Nueva imagen al lado izquierdo del título -->
-  <img class="new-friend" src="{{ url_for('static', filename='img/pochacco.png') }}" alt="Pochacco">
+    <div class="title-box">
+      <h1 class="cinecito-title">Cinecito ☁️</h1>
+      <p>Miramos juntitos 💙</p>
+    </div>
 
-  <h1 class="cinecito-title">Cinecito ☁️</h1>
-  <p>Miramos juntitos 💙</p>
+    <img class="cinnamoroll" src="{{ url_for('static', filename='img/cinnamoroll.png') }}" alt="Cinnamoroll">
+  </div>
 </div>
+
 
   <!-- Tarjeta de video -->
   <div class="card">

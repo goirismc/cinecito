@@ -334,3 +334,32 @@ body.night .cinecito-title {
   left: 40px;   /* 🔑 Esto la pone hacia la izquierda */
   width: 120px;
 }
+/* === FIX HEADER LAYOUT (sin romper estética) === */
+
+.header {
+  text-align: center;
+}
+
+/* Contenedor horizontal */
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 900px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+/* Quitamos absolute que rompía todo */
+.cinnamoroll,
+.new-friend {
+  position: static;     /* 🔑 CLAVE */
+  width: 100px;
+}
+
+/* Centro real del título */
+.title-box {
+  text-align: center;
+}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=1.2">
+
