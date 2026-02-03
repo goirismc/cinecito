@@ -352,7 +352,7 @@ body.night .cinecito-title {
 
 /* Quitamos absolute que rompía todo */
 .cinnamoroll,
-.new-friend {
+.pochacco {
   position: static;     /* 🔑 CLAVE */
   width: 100px;
 }
@@ -363,3 +363,20 @@ body.night .cinecito-title {
 }
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=1.2">
 
+/* === FIX tamaño Cinnamoroll === */
+.header-row .cinnamoroll {
+  width: 180px;
+}
+
+/* === FIX superposición título / estado === */
+#status {
+  margin-bottom: 25px;
+}
+
+.header-row {
+  margin-top: 10px;
+}
+
+.cinecito-title {
+  margin-top: 0;
+}
