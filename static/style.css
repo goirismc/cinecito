@@ -306,3 +306,31 @@ body.night .cinecito-title {
   text-shadow: 2px 2px 0 #fff, 4px 4px 8px rgba(173,216,230,0.6);
   margin-top: -40px; /* lo baja para que toque las patitas */
 }
+#messages {
+  list-style: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#messages li {
+  margin: 5px 0;
+  padding: 5px;
+  background: #e6e6e6;
+  border-radius: 4px;
+  font-family: 'Baloo 2', cursive;
+  transition: opacity 0.3s ease;
+}
+.cinnamoroll {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  width: 120px;
+}
+
+.new-friend {
+  position: absolute;
+  top: 20px;
+  left: 40px;   /* 🔑 Esto la pone hacia la izquierda */
+  width: 120px;
+}

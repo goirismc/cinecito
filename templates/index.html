@@ -20,8 +20,11 @@
   <div class="header">
   <div id="status" class="offline"> Esperando a tu pareja…</div>
 
-  <!-- Imagen de Cinnamoroll más grande y cerca del título -->
+  <!-- Imagen de Cinnamoroll -->
   <img class="cinnamoroll" src="{{ url_for('static', filename='img/cinnamoroll.png') }}" alt="Cinnamoroll">
+
+  <!-- Nueva imagen al lado izquierdo del título -->
+  <img class="new-friend" src="{{ url_for('static', filename='img/pochacco.png') }}" alt="Pochacco">
 
   <h1 class="cinecito-title">Cinecito ☁️</h1>
   <p>Miramos juntitos 💙</p>
@@ -45,7 +48,10 @@
 
   <!-- Tarjeta de chat -->
   <div class="card">
-    <div class="chat" id="chat"></div>
+    <div class="chat" id="chat">
+      <!-- 🔑 Aquí se mostrarán las notitas -->
+      <ul id="messages"></ul>
+    </div>
     <div class="chat-input">
       <input id="message" placeholder="Escribile algo bonito… ☁️">
       <button onclick="sendMessage()">↩︎</button>

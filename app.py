@@ -21,6 +21,12 @@ class Movie(db.Model):
     url = db.Column(db.String(200))
     uploaded_by = db.Column(db.String(80))
 
+# Modelo de Notitas
+class Note(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(500))
+    author = db.Column(db.String(80))
+
 # Usamos gevent para WebSocket estable
 socketio = SocketIO(
     app,
@@ -51,10 +57,11 @@ def convert_video(filepath, converted_path):
             print("Conversión rápida terminada:", final_url)
             socketio.emit("new_video", {"url": final_url})
 
-            # Guardar versión convertida en la base
-            movie = Movie(title=os.path.basename(converted_path), url=final_url, uploaded_by="Juan")
-            db.session.add(movie)
-            db.session.commit()
+            # Solución: abrir contexto de aplicación
+            with app.app_context():
+                movie = Movie(title=os.path.basename(converted_path), url=final_url, uploaded_by="Juan")
+                db.session.add(movie)
+                db.session.commit()
 
         threading.Thread(target=wait_and_emit).start()
 
@@ -101,6 +108,11 @@ def movies():
     movies = Movie.query.all()
     return jsonify([{"title": m.title, "url": m.url} for m in movies])
 
+@app.route("/notes")
+def notes():
+    notes = Note.query.all()
+    return jsonify([{"content": n.content, "author": n.author} for n in notes])
+
 @socketio.on("video_event")
 def handle_video_event(data):
     socketio.emit("video_event", data, include_self=False)
@@ -108,6 +120,12 @@ def handle_video_event(data):
 @socketio.on("chat_message")
 def handle_chat_message(msg):
     socketio.emit("chat_message", msg)
+
+    # Guardar notita en la base
+    with app.app_context():
+        note = Note(content=msg, author="Juan")
+        db.session.add(note)
+        db.session.commit()
 
 if __name__ == "__main__":
     # Con gevent no hace falta monkey_patch manual

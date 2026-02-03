@@ -18,14 +18,12 @@ socket.on("disconnect", () => {
 });
 
 // --- Subir video con feedback visual ---
-// Para pruebas rápidas: descomentar formData.append("no_convert","1")
 uploadInput.addEventListener("change", async () => {
   const file = uploadInput.files[0];
   if (!file) return;
 
   const formData = new FormData();
   formData.append("video", file);
-  // formData.append("no_convert", "1"); // descomentar para respuesta inmediata en pruebas
 
   status.textContent = "☁️ Subiendo peli…";
 
@@ -45,10 +43,9 @@ uploadInput.addEventListener("change", async () => {
 });
 
 // --- Control de emisión y prevención de loops ---
-let suppressEmit = false; // true cuando aplicamos un evento remoto
+let suppressEmit = false;
 let seekDebounce = null;
 
-// Emitir play/pause desde controles personalizados
 function playVideo() {
   if (!suppressEmit) socket.emit("video_event", { action: "play", time: video.currentTime });
   animateButton("▶︎");
@@ -61,7 +58,6 @@ function pauseVideo() {
   video.pause();
 }
 
-// Si el usuario usa los controles nativos, capturamos y emitimos
 video.addEventListener("play", () => {
   if (!suppressEmit) socket.emit("video_event", { action: "play", time: video.currentTime });
 });
@@ -69,12 +65,10 @@ video.addEventListener("pause", () => {
   if (!suppressEmit) socket.emit("video_event", { action: "pause", time: video.currentTime });
 });
 
-// Fullscreen (diseño intacto)
 fullscreenBtn.addEventListener("click", () => {
   if (video.requestFullscreen) video.requestFullscreen();
 });
 
-// Emitir seek con debounce para no spamear
 video.addEventListener("seeking", () => {
   if (seekDebounce) clearTimeout(seekDebounce);
   seekDebounce = setTimeout(() => {
@@ -83,23 +77,20 @@ video.addEventListener("seeking", () => {
   }, 150);
 });
 
-// --- Aplicar tiempo de forma segura (esperar metadata si hace falta) ---
 function applyTimeSafely(t, cb) {
   if (isNaN(t)) { if (cb) cb(); return; }
   if (video.readyState >= 1) {
-    try { video.currentTime = t; } catch (e) { /* ignore */ }
+    try { video.currentTime = t; } catch (e) {}
     if (cb) cb();
   } else {
     video.addEventListener("loadedmetadata", function once() {
-      try { video.currentTime = t; } catch (e) { /* ignore */ }
+      try { video.currentTime = t; } catch (e) {}
       if (cb) cb();
     }, { once: true });
   }
 }
 
-// --- Recibir eventos de video (sincronización incluida) ---
 socket.on("video_event", (data) => {
-  // Protegemos para no reemitir lo que aplicamos
   suppressEmit = true;
 
   if (data.action === "play") {
@@ -110,11 +101,10 @@ socket.on("video_event", (data) => {
     applyTimeSafely(data.time);
   }
 
-  // Pequeña espera para evitar eco de eventos
   setTimeout(() => { suppressEmit = false; }, 250);
 });
 
-// --- Chat (diseño y animación intactos) ---
+// --- Chat persistente ---
 function sendMessage() {
   const msg = messageInput.value.trim();
   if (msg) {
@@ -123,18 +113,31 @@ function sendMessage() {
   }
 }
 
-socket.on("chat_message", (msg) => {
-  const p = document.createElement("p");
-  p.textContent = msg;
-  p.classList.add("chat-msg");
-  chatBox.appendChild(p);
+// Al cargar la página, traer historial de notitas
+fetch("/notes")
+  .then(res => res.json())
+  .then(data => {
+    const messagesList = document.getElementById("messages");
+    data.forEach(n => {
+      const li = document.createElement("li");
+      li.textContent = `${n.author}: ${n.content}`;
+      li.classList.add("chat-msg");
+      messagesList.appendChild(li);
+    });
+  });
 
-  // Animación suave
-  p.style.opacity = 0;
-  setTimeout(() => (p.style.opacity = 1), 50);
+socket.on("chat_message", (msg) => {
+  const messagesList = document.getElementById("messages");
+  const li = document.createElement("li");
+  li.textContent = `Juan: ${msg}`;
+  li.classList.add("chat-msg");
+  messagesList.appendChild(li);
+
+  li.style.opacity = 0;
+  setTimeout(() => (li.style.opacity = 1), 50);
 });
 
-// --- Animación de botones (mantener diseño) ---
+// --- Animación de botones ---
 function animateButton(symbol) {
   const btn = document.createElement("div");
   btn.textContent = symbol;
@@ -143,9 +146,8 @@ function animateButton(symbol) {
   setTimeout(() => btn.remove(), 800);
 }
 
-// --- Cuando alguien sube una peli, todos la reciben (diseño intacto) ---
+// --- Cuando alguien sube una peli, todos la reciben ---
 socket.on("new_video", (data) => {
-  // Si ya hay la misma URL, no recargamos; si es distinta, cargamos y mostramos estado
   if (data && data.url && video.src !== data.url) {
     video.src = data.url;
     status.textContent = "☁️ Peli lista para ver juntitos 💙";
