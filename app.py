@@ -5,9 +5,21 @@ from threading import Lock
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from flask_socketio import SocketIO
 from werkzeug.utils import secure_filename
+from flask_sqlalchemy import SQLAlchemy  # 🔑 agregado
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "default-secret")
+
+# Configuración de Postgres en Render
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+db = SQLAlchemy(app)
+
+# Modelo de Pelis
+class Movie(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120))
+    url = db.Column(db.String(200))
+    uploaded_by = db.Column(db.String(80))
 
 # Usamos gevent para WebSocket estable
 socketio = SocketIO(
@@ -39,6 +51,11 @@ def convert_video(filepath, converted_path):
             print("Conversión rápida terminada:", final_url)
             socketio.emit("new_video", {"url": final_url})
 
+            # Guardar versión convertida en la base
+            movie = Movie(title=os.path.basename(converted_path), url=final_url, uploaded_by="Juan")
+            db.session.add(movie)
+            db.session.commit()
+
         threading.Thread(target=wait_and_emit).start()
 
     except Exception as e:
@@ -67,11 +84,22 @@ def upload():
         # Respondemos de inmediato con el original
         final_url = f"/uploads/{filename}"
         socketio.emit("new_video", {"url": final_url})
+
+        # Guardar original en la base
+        movie = Movie(title=filename, url=final_url, uploaded_by="Juan")
+        db.session.add(movie)
+        db.session.commit()
+
         return jsonify({"url": final_url})
 
 @app.route("/uploads/<filename>")
 def uploaded_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename, mimetype="video/mp4")
+
+@app.route("/movies")
+def movies():
+    movies = Movie.query.all()
+    return jsonify([{"title": m.title, "url": m.url} for m in movies])
 
 @socketio.on("video_event")
 def handle_video_event(data):
@@ -83,4 +111,6 @@ def handle_chat_message(msg):
 
 if __name__ == "__main__":
     # Con gevent no hace falta monkey_patch manual
+    with app.app_context():
+        db.create_all()  # 🔑 crea las tablas si no existen
     socketio.run(app, host="0.0.0.0", port=5000)

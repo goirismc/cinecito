@@ -14,3 +14,5 @@ bidict==0.23.1
 zope.event==6.1
 zope.interface==8.2
 eventlet==0.36.1
+flask_sqlalchemy
+psycopg2-binary
